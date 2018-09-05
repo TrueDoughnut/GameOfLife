@@ -32,9 +32,15 @@ class Runner{
         this.board = board;
     }
 
-    void run(){
+    boolean run(){
         ArrayList<ArrayList<Integer>> change = check();
-        change(change);
+        if(change == null){
+            System.out.println(cycles);
+            return false;
+        } else {
+            change(change);
+            return true;
+        }
     }
 
     private void createRandom(){
@@ -81,7 +87,6 @@ class Runner{
                 board[x][y] = 0;
             }
         }
-        
     }
 
     private ArrayList<Integer> coords(int x, int y){

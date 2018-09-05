@@ -50,7 +50,10 @@ public class GUI implements ActionListener {
     public void actionPerformed(ActionEvent e){
         frame.getContentPane().removeAll();
         frame.revalidate();
-        runner.run();
+        boolean run = runner.run();
+        if(!run){
+            timer.stop();
+        }
         run();
         frame.pack();
         frame.repaint();
