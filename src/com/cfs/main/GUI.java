@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GUI implements ActionListener {
+public class GUI implements ActionListener, Runnable {
 
     private Runner runner;
 
@@ -27,12 +27,12 @@ public class GUI implements ActionListener {
     private void createAndShowGUI(){
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(runner.getBoard().length, runner.getBoard()[0].length, 5, 5));
-        run();
+        cycle();
         frame.pack();
         frame.setVisible(true);
     }
 
-    private void run(){
+    private void cycle(){
         for(int i = 0; i < runner.getBoard().length; i++){
             for(int j = 0; j < runner.getBoard()[i].length; j++){
                 JPanel panel = new JPanel();
@@ -47,6 +47,11 @@ public class GUI implements ActionListener {
     }
 
     @Override
+    public void run(){
+        this.start();
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e){
         frame.getContentPane().removeAll();
         frame.revalidate();
@@ -54,7 +59,7 @@ public class GUI implements ActionListener {
         if(!run){
             timer.stop();
         }
-        run();
+        cycle();
         frame.pack();
         frame.repaint();
     }
