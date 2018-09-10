@@ -1,4 +1,6 @@
-package com.cfs.main;
+package com.cfs.runner;
+
+import com.cfs.runner.Runner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +16,9 @@ public class GUI implements ActionListener, Runnable {
     }
     public GUI(int[][] board){
         runner = new Runner(board);
+    }
+    public GUI(int x, int y){
+        runner = new Runner(x, y);
     }
 
     private JFrame frame = new JFrame("Game of Life");

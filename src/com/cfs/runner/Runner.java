@@ -1,23 +1,23 @@
-package com.cfs.main;
+package com.cfs.runner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-class Runner {
+public class Runner {
 
     private int[][] board;
     private int cycles;
     private HashMap<String, Integer> data;
     private boolean print;
 
-    Runner(){
+    public Runner(){
         print = true;
         createRandom();
         data = new HashMap<>();
         getData();
     }
-    Runner(int[][] board){
+    public Runner(int[][] board){
         print = true;
         //must be rectangular matrix
         for(int i = 0; i < board.length-1; i++){
@@ -29,16 +29,22 @@ class Runner {
         data = new HashMap<>();
         getData();
     }
-    Runner(boolean print){
+    public Runner(boolean print){
         this();
         this.print = print;
     }
-    Runner(int[][] board, boolean print){
+    public Runner(int[][] board, boolean print){
         this(board);
         this.print = print;
     }
+    public Runner(int x, int y){
+        print = true;
+        createRandom(x, y);
+        data = new HashMap<>();
+        getData();
+    }
 
-    boolean run(){
+    public boolean run(){
         ArrayList<ArrayList<Integer>> change = check();
         if(change == null || cycles >= 1000){
             if(print) {
@@ -54,7 +60,10 @@ class Runner {
     }
 
     private void createRandom(){
-        board = new int[20][20];
+        this.createRandom(20, 20);
+    }
+    private void createRandom(int x, int y){
+        board = new int[y][x];
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[i].length; j++){
                 board[i][j] = new Random().nextInt(2); // 1 (alive) or 0 (dead)
@@ -146,12 +155,18 @@ class Runner {
         data.put("octopules", getAmount(8));
     }
 
-    int[][] getBoard(){
+    public int[][] getBoard(){
         return board;
     }
 
-    HashMap<String, Integer> getDataMap(){
+    public HashMap<String, Integer> getDataMap(){
         return data;
+    }
+
+    public void setDimensions(int x, int y){
+        createRandom(x, y);
+        data = new HashMap<>();
+        getData();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.cfs.main;
+package com.cfs.random;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
