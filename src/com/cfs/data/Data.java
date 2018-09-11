@@ -1,7 +1,5 @@
 package com.cfs.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
