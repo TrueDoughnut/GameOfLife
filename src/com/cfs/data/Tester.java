@@ -1,4 +1,4 @@
-package com.cfs.random;
+package com.cfs.data;
 
 import com.cfs.runner.Runner;
 
@@ -23,14 +23,21 @@ public class Tester implements Runnable {
     @Override
     public void run() {
         Runner runner = new Runner(false);
+        HashMap<String, Integer> map = new HashMap<>();
         if(!(x == 0 || y == 0)){
             runner.setDimensions(x, y);
+            runner.setPrint(false);
+            map = runner.getDimensionData();
+        } else {
+            map = runner.getNeighborData();
         }
         while (true) {
             if (!runner.run()) {
                 break;
             }
         }
-        multipleTestNeighbors.add(runner.getDataMap());
+        map.put("cycles", runner.getCycles());
+        multipleTestNeighbors.add(map);
+
     }
 }

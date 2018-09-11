@@ -8,14 +8,12 @@ public class Runner {
 
     private int[][] board;
     private int cycles;
-    private HashMap<String, Integer> data;
     private boolean print;
 
     public Runner(){
         print = true;
         createRandom();
-        data = new HashMap<>();
-        getData();
+        getNeighborData();
     }
     public Runner(int[][] board){
         print = true;
@@ -26,8 +24,6 @@ public class Runner {
             }
         }
         this.board = board;
-        data = new HashMap<>();
-        getData();
     }
     public Runner(boolean print){
         this();
@@ -40,8 +36,7 @@ public class Runner {
     public Runner(int x, int y){
         print = true;
         createRandom(x, y);
-        data = new HashMap<>();
-        getData();
+        getNeighborData();
     }
 
     public boolean run(){
@@ -49,9 +44,7 @@ public class Runner {
         if(change == null || cycles >= 1000){
             if(print) {
                 System.out.println(cycles);
-                System.out.println(data);
             }
-            data.put("cycles", cycles);
             return false;
         } else {
             change(change);
@@ -143,7 +136,8 @@ public class Runner {
         return count;
     }
 
-    private void getData(){
+    public HashMap<String, Integer> getNeighborData(){
+        HashMap<String, Integer> data = new HashMap<>();
         data.put("none", getAmount(0));
         data.put("singles", getAmount(1));
         data.put("doubles", getAmount(2));
@@ -153,20 +147,27 @@ public class Runner {
         data.put("sextuples", getAmount(6));
         data.put("septuples", getAmount(7));
         data.put("octopules", getAmount(8));
+        return data;
+    }
+    public HashMap<String, Integer> getDimensionData(){
+        HashMap<String, Integer> data = new HashMap<>();
+        data.put("x", this.board[0].length);
+        data.put("y", this.board.length);
+        return data;
     }
 
     public int[][] getBoard(){
         return board;
     }
-
-    public HashMap<String, Integer> getDataMap(){
-        return data;
+    public int getCycles(){
+        return cycles;
     }
 
     public void setDimensions(int x, int y){
         createRandom(x, y);
-        data = new HashMap<>();
-        getData();
+    }
+    public void setPrint(boolean print){
+        this.print = print;
     }
 
     @Override
