@@ -41,7 +41,7 @@ public class Runner {
 
     public boolean run(){
         ArrayList<ArrayList<Integer>> change = check();
-        if(change == null || cycles >= 1000){
+        if(change == null || cycles >= 10000){
             if(print) {
                 System.out.println(cycles);
             }
@@ -151,9 +151,31 @@ public class Runner {
     }
     public HashMap<String, Integer> getDimensionData(){
         HashMap<String, Integer> data = new HashMap<>();
-        data.put("x", this.board[0].length);
-        data.put("y", this.board.length);
+        data.put("cells", this.board[0].length * this.board.length);
         return data;
+    }
+    public HashMap<String, Integer> getCellData(){
+        HashMap<String, Integer> data = new HashMap<>();
+        data.put("live", getLiveCells());
+        data.put("dead", getDeadCells());
+        return data;
+    }
+    private int getCells(int x){
+        int count = 0;
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[i].length; j++){
+                if(board[i][j] == x){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    private int getLiveCells(){
+        return getCells(1);
+    }
+    private int getDeadCells(){
+        return getCells(0);
     }
 
     public int[][] getBoard(){
