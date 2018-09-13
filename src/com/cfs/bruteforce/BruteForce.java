@@ -1,8 +1,9 @@
 package com.cfs.bruteforce;
 
 import com.cfs.runner.Runner;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,10 +19,17 @@ public class BruteForce {
     public void run(){
         ArrayList<Thread> threads = new ArrayList<>();
         //create all combinations of arrays
-        BigInteger combinations = BigInteger.ONE;
-        combinations = combinations.multiply(new BigInteger("2").pow(x*y));
-        for(BigInteger i = BigInteger.ZERO; i < combinations; i)
-        System.out.println(threads.size());
+        int a = 0, b = 0;
+        for(long i = 0; i < Math.pow(2, x*y); i++){
+            int[][] board = new int[y][x];
+            for(int j = 0; j < a; j++){
+                for(int k = 0; k < board[j].length; j++){
+                    board[j][k] = 1;
+                }
+            }
+            System.out.println(this.printArray(board));
+            threads.add(new Thread(new Cycles(board)));
+        }
         for(Thread thread : threads){
             thread.start();
         }
@@ -32,7 +40,6 @@ public class BruteForce {
                 e.printStackTrace();
             }
         }
-        System.out.println(getInfinite());
     }
 
     private ArrayList<int[][]> getInfinite(){
@@ -43,6 +50,17 @@ public class BruteForce {
             }
         }
         return list;
+    }
+
+    private String printArray(int[][] arr){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int[] array : arr){
+            for(int x : array){
+                stringBuilder.append(x).append(" ");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
     }
 }
 
@@ -61,6 +79,11 @@ class Cycles implements Runnable {
     @Override
     public void run(){
         while(runner.run()){}
+        System.out.println(runner.getCycles());
         cycles.put(runner.getBoard(), runner.getCycles());
+    }
+
+    static HashMap<int[][], Integer> getCycles() {
+        return cycles;
     }
 }
