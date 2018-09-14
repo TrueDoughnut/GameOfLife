@@ -25,7 +25,13 @@ public abstract class Data {
     private XYSeries createDataset(String key){
         XYSeries series = new XYSeries(key);
         for(HashMap<String, Integer> data : Tester.multipleTestNeighbors) {
-            series.add(data.get(key), data.get("cycles"));
+            int cycles;
+            if(data.get("cycles") == 10000){
+                cycles = 1000;
+            } else {
+                cycles = data.get("cycles");
+            }
+            series.add(data.get(key), (Number)cycles);
         }
         return series;
     }

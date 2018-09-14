@@ -22,7 +22,8 @@ public class GUI implements ActionListener, Runnable {
     }
 
     private JFrame frame = new JFrame("Game of Life");
-    private Timer timer = new Timer(1000, this);
+    private int delay = 100;
+    private Timer timer = new Timer(delay, this);
 
     public void start(){
         createAndShowGUI();
@@ -54,6 +55,15 @@ public class GUI implements ActionListener, Runnable {
     @Override
     public void run(){
         this.start();
+    }
+
+    public void setDelay(int delay){
+        this.delay = delay;
+        timer = new Timer(delay, this);
+    }
+
+    public int neighbors(){
+        return this.runner.getNeighbors(0, 0);
     }
 
     @Override

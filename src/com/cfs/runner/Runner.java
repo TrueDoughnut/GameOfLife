@@ -85,6 +85,9 @@ public class Runner {
         cycles++;
         if(change.isEmpty()){
             cycles--;
+            if(cycles == 0 && this.isLive()){
+                cycles = max;
+            }
             return null;
         }
         return change;
@@ -109,12 +112,14 @@ public class Runner {
         return coords;
     }
 
-    private int getNeighbors(int x, int y){
+    public int getNeighbors(int x, int y){
         int count = 0;
+        int i = 0, j = 0;
         try {
-            for(int i = x-1; i <= x+1; i++){
-                for(int j = y-1; j <= y+1; j++){
-                    if(i == x && j == y){
+            for(i = x-1; i <= x+1; i++){
+                for(j = y-1; j <= y+1; j++){
+                    if((i == x && j == y) || (i == -1 || j == -1)
+                            || (i >= board.length || j >= board[i].length)){
                         continue;
                     }
                     if(board[i][j] == 1){
@@ -122,7 +127,10 @@ public class Runner {
                     }
                 }
             }
-        } catch(IndexOutOfBoundsException ignore){}
+        } catch(IndexOutOfBoundsException e){
+            e.printStackTrace();
+            System.out.println("x: " + i + "\ny: " + j);
+        }
         return count;
     }
 
@@ -197,13 +205,24 @@ public class Runner {
         this.print = print;
     }
 
+    public boolean isLive(){
+        for(int[] arr : board){
+            for(int i : arr){
+                if(i == 1){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString(){
         StringBuilder str = new StringBuilder();
 
-        for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board[i].length; j++){
-                str.append(board[i][j]).append(" ");
+        for (int[] aBoard : board) {
+            for (int j = 0; j < aBoard.length; j++) {
+                str.append(aBoard[j]).append(" ");
             }
             str.append("\n");
         }

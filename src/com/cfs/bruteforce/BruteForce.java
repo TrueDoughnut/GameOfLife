@@ -3,8 +3,8 @@ package com.cfs.bruteforce;
 import com.cfs.runner.Runner;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class BruteForce {
 
@@ -29,7 +29,19 @@ public class BruteForce {
             for(int k = 0; k < b; k++){
                 board[a][k] = 1;
             }
-            threads.add(new Thread(new Cycles(board)));
+            //create all permutations
+            Integer[] arr = new Integer[x*y];
+            int j = 0;
+            for(int[] array : board){
+                for(int x : array){
+                    arr[j++] = x;
+                }
+            }
+            Permutations<Integer> permutations = new Permutations<Integer>(arr);
+            while(permutations.hasNext()) {
+                int[][] board1 = new int[y][x];
+                threads.add(new Thread());
+            }
             if(b >= board[0].length){
                 b = 0;
                 a++;
@@ -82,6 +94,7 @@ class Cycles implements Runnable {
             board[i] = runner.getBoard()[i].clone();
         }
         while(runner.run()){}
+        System.out.println(runner.getCycles());
         cycles.put(board, runner.getCycles());
     }
 
@@ -101,5 +114,87 @@ class Cycles implements Runnable {
             }
         }
         return stringBuilder.toString();
+    }
+}
+
+class Permutations<E> implements  Iterator<E[]>{
+
+    private E[] arr;
+    private int[] ind;
+    private boolean has_next;
+
+    public E[] output;//next() returns this array, make it public
+
+    Permutations(E[] arr){
+        this.arr = arr.clone();
+        ind = new int[arr.length];
+        //convert an array of any elements into array of integers - first occurrence is used to enumerate
+        Map<E, Integer> hm = new HashMap<E, Integer>();
+        for(int i = 0; i < arr.length; i++){
+            Integer n = hm.get(arr[i]);
+            if (n == null){
+                hm.put(arr[i], i);
+                n = i;
+            }
+            ind[i] = n.intValue();
+        }
+        Arrays.sort(ind);//start with ascending sequence of integers
+
+
+        //output = new E[arr.length]; <-- cannot do in Java with generics, so use reflection
+        output = (E[]) Array.newInstance(arr.getClass().getComponentType(), arr.length);
+        has_next = true;
+    }
+
+    public boolean hasNext() {
+        return has_next;
+    }
+
+    /**
+     * Computes next permutations. Same array instance is returned every time!
+     * @return
+     */
+    public E[] next() {
+        if (!has_next)
+            throw new NoSuchElementException();
+
+        for(int i = 0; i < ind.length; i++){
+            output[i] = arr[ind[i]];
+        }
+
+
+        //get next permutation
+        has_next = false;
+        for(int tail = ind.length - 1;tail > 0;tail--){
+            if (ind[tail - 1] < ind[tail]){//still increasing
+
+                //find last element which does not exceed ind[tail-1]
+                int s = ind.length - 1;
+                while(ind[tail-1] >= ind[s])
+                    s--;
+
+                swap(ind, tail-1, s);
+
+                //reverse order of elements in the tail
+                for(int i = tail, j = ind.length - 1; i < j; i++, j--){
+                    swap(ind, i, j);
+                }
+                has_next = true;
+                break;
+            }
+
+        }
+        return output;
+    }
+
+    private void swap(int[] arr, int i, int j){
+        int t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+    }
+
+    @Override
+    public void remove() {
+
     }
 }
