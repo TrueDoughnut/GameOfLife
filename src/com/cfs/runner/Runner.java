@@ -9,6 +9,7 @@ public class Runner {
     private int[][] board;
     private int cycles;
     private boolean print;
+    private static int max = 10000;
 
     public Runner(){
         print = true;
@@ -41,7 +42,7 @@ public class Runner {
 
     public boolean run(){
         ArrayList<ArrayList<Integer>> change = check();
-        if(change == null || cycles >= 10000){
+        if(change == null || cycles >= max){
             if(print) {
                 System.out.println(cycles);
             }
@@ -183,6 +184,9 @@ public class Runner {
     }
     public int getCycles(){
         return cycles;
+    }
+    public static int getMax(){
+        return max;
     }
 
     public void setDimensions(int x, int y){
