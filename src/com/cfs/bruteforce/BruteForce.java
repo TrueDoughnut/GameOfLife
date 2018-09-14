@@ -30,7 +30,6 @@ public class BruteForce {
                 board[a][k] = 1;
             }
             threads.add(new Thread(new Cycles(board)));
-            b++;
             if(b >= board[0].length){
                 b = 0;
                 a++;
@@ -38,6 +37,7 @@ public class BruteForce {
             if(a >= board.length){
                 break;
             }
+            b++;
         }
         for(Thread thread : threads){
             thread.start();
@@ -45,7 +45,8 @@ public class BruteForce {
         for(Thread thread : threads){
             thread.join();
         }
-        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(Cycles.cyclesString()));
+
+        System.out.println(Cycles.getCycles());
     }
 
     private ArrayList<int[][]> getInfinite(){
@@ -62,7 +63,6 @@ public class BruteForce {
 class Cycles implements Runnable {
 
     private Runner runner;
-    private int[][] board;
 
     static volatile HashMap<int[][], Integer> cycles;
 
@@ -72,23 +72,20 @@ class Cycles implements Runnable {
 
     Cycles(int[][] board){
         runner = new Runner(board);
-        this.board = board;
         runner.setPrint(false);
     }
 
     @Override
     public void run(){
-        while(runner.run()){}
-        synchronized (this){
-            cycles.put(this.board, runner.getCycles());
+        int[][] board = new int[runner.getBoard().length][];
+        for(int i = 0; i < board.length; i++){
+            board[i] = runner.getBoard()[i].clone();
         }
+        while(runner.run()){}
+        cycles.put(board, runner.getCycles());
     }
 
-    static HashMap<int[][], Integer> getCycles(){
-        return cycles;
-    }
-
-    static HashMap<String, Integer> cyclesString(){
+    static HashMap<String, Integer> getCycles(){
         HashMap<String, Integer> map = new HashMap<>();
         for(int[][] key : cycles.keySet()){
             map.put(printArray(key), cycles.get(key));
@@ -96,7 +93,7 @@ class Cycles implements Runnable {
         return map;
     }
 
-    static String printArray(int[][] arr){
+    private static String printArray(int[][] arr){
         StringBuilder stringBuilder = new StringBuilder();
         for(int[] array : arr){
             for(int x : array){

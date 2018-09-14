@@ -22,7 +22,7 @@ public class GUI implements ActionListener, Runnable {
     }
 
     private JFrame frame = new JFrame("Game of Life");
-    private Timer timer = new Timer(100, this);
+    private Timer timer = new Timer(1000, this);
 
     public void start(){
         createAndShowGUI();

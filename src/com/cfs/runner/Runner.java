@@ -7,7 +7,7 @@ import java.util.Random;
 public class Runner {
 
     private int[][] board;
-    private int cycles;
+    private int cycles = 0;
     private boolean print;
     private static int max = 10000;
 
@@ -84,6 +84,7 @@ public class Runner {
         }
         cycles++;
         if(change.isEmpty()){
+            cycles--;
             return null;
         }
         return change;
@@ -198,13 +199,13 @@ public class Runner {
 
     @Override
     public String toString(){
-        String str = "";
+        StringBuilder str = new StringBuilder();
 
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[i].length; j++){
-                str += board[i][j] + " ";
+                str.append(board[i][j]).append(" ");
             }
-            str += "\n";
+            str.append("\n");
         }
 
         return str + "\n";
