@@ -9,7 +9,7 @@ public class Main {
         bruteForce();
     }
     private static void bruteForce() throws InterruptedException {
-        BruteForce bruteForce = new BruteForce(2, 2);
+        BruteForce bruteForce = new BruteForce(5, 5);
         bruteForce.run();
     }
     private static void GUI(){

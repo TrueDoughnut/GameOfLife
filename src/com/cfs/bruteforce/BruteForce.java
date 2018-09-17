@@ -16,7 +16,7 @@ public class BruteForce {
     }
 
     public void run() throws InterruptedException {
-        ArrayList<Thread> threads = new ArrayList<>();
+        Queue<int[][]> queue = new LinkedList<>();
         //create all combinations of arrays
         int a = 0, b = 0;
         for(long i = 0; i < Math.pow(2, x*y); i++){
@@ -37,10 +37,17 @@ public class BruteForce {
                     arr[j++] = x;
                 }
             }
-            Permutations<Integer> permutations = new Permutations<Integer>(arr);
+            Permutations<Integer> permutations = new Permutations<>(arr);
             while(permutations.hasNext()) {
-                int[][] board1 = new int[y][x];
-                threads.add(new Thread());
+                int[][] matrix = new int[y][x];
+                int c = 0;
+                Integer[] permutation = permutations.next();
+                for(int[] array : matrix){
+                    for(int k = 0; k < array.length; k++){
+                        array[k] = permutation[c++];
+                    }
+                }
+                queue.add(matrix);
             }
             if(b >= board[0].length){
                 b = 0;
@@ -51,14 +58,41 @@ public class BruteForce {
             }
             b++;
         }
+        Thread[] threads = new Thread[20];
+        for(Thread thread : threads){
+            thread = new Thread(new Cycles(queue.poll()));
+        }
         for(Thread thread : threads){
             thread.start();
         }
-        for(Thread thread : threads){
-            thread.join();
-        }
 
-        System.out.println(Cycles.getCycles());
+        doThreads(threads, queue);
+
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(Cycles.getCycles()));
+    }
+
+    private void doThreads(Thread[] threads, Queue<int[][]> queue){
+        while(running(threads)){
+            for(Thread thread : threads){
+                if(!thread.isAlive()){
+                    int[][] matrix = queue.poll();
+                    if(matrix == null){
+                        return;
+                    }
+                    thread = new Thread(new Cycles(queue.poll()));
+                    thread.start();
+                }
+            }
+        }
+    }
+
+    private boolean running(Thread[] threads){
+        for(Thread thread : threads){
+            if(thread.isAlive()){
+                return true;
+            }
+        }
+        return false;
     }
 
     private ArrayList<int[][]> getInfinite(){
@@ -114,87 +148,5 @@ class Cycles implements Runnable {
             }
         }
         return stringBuilder.toString();
-    }
-}
-
-class Permutations<E> implements  Iterator<E[]>{
-
-    private E[] arr;
-    private int[] ind;
-    private boolean has_next;
-
-    public E[] output;//next() returns this array, make it public
-
-    Permutations(E[] arr){
-        this.arr = arr.clone();
-        ind = new int[arr.length];
-        //convert an array of any elements into array of integers - first occurrence is used to enumerate
-        Map<E, Integer> hm = new HashMap<E, Integer>();
-        for(int i = 0; i < arr.length; i++){
-            Integer n = hm.get(arr[i]);
-            if (n == null){
-                hm.put(arr[i], i);
-                n = i;
-            }
-            ind[i] = n.intValue();
-        }
-        Arrays.sort(ind);//start with ascending sequence of integers
-
-
-        //output = new E[arr.length]; <-- cannot do in Java with generics, so use reflection
-        output = (E[]) Array.newInstance(arr.getClass().getComponentType(), arr.length);
-        has_next = true;
-    }
-
-    public boolean hasNext() {
-        return has_next;
-    }
-
-    /**
-     * Computes next permutations. Same array instance is returned every time!
-     * @return
-     */
-    public E[] next() {
-        if (!has_next)
-            throw new NoSuchElementException();
-
-        for(int i = 0; i < ind.length; i++){
-            output[i] = arr[ind[i]];
-        }
-
-
-        //get next permutation
-        has_next = false;
-        for(int tail = ind.length - 1;tail > 0;tail--){
-            if (ind[tail - 1] < ind[tail]){//still increasing
-
-                //find last element which does not exceed ind[tail-1]
-                int s = ind.length - 1;
-                while(ind[tail-1] >= ind[s])
-                    s--;
-
-                swap(ind, tail-1, s);
-
-                //reverse order of elements in the tail
-                for(int i = tail, j = ind.length - 1; i < j; i++, j--){
-                    swap(ind, i, j);
-                }
-                has_next = true;
-                break;
-            }
-
-        }
-        return output;
-    }
-
-    private void swap(int[] arr, int i, int j){
-        int t = arr[i];
-        arr[i] = arr[j];
-        arr[j] = t;
-    }
-
-    @Override
-    public void remove() {
-
     }
 }
