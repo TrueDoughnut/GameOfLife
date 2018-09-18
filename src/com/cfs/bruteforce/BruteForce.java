@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BruteForce {
 
@@ -58,28 +59,25 @@ public class BruteForce {
             }
             b++;
         }
-        Thread[] threads = new Thread[20];
-        for(Thread thread : threads){
-            thread = new Thread(new Cycles(queue.poll()));
-        }
-        for(Thread thread : threads){
-            thread.start();
-        }
 
+        Thread[] threads = new Thread[20];
         doThreads(threads, queue);
 
-        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(Cycles.getCycles()));
+        System.out.println(new GsonBuilder()
+                        .setPrettyPrinting().create().
+                        toJson(Cycles.getCycles()));
+        System.out.println(Cycles.getCycles().size());
     }
 
     private void doThreads(Thread[] threads, Queue<int[][]> queue){
         while(running(threads)){
             for(Thread thread : threads){
-                if(!thread.isAlive()){
+                if(thread == null || !thread.isAlive()){
                     int[][] matrix = queue.poll();
                     if(matrix == null){
                         return;
                     }
-                    thread = new Thread(new Cycles(queue.poll()));
+                    thread = new Thread(new Cycles(matrix));
                     thread.start();
                 }
             }
@@ -88,7 +86,7 @@ public class BruteForce {
 
     private boolean running(Thread[] threads){
         for(Thread thread : threads){
-            if(thread.isAlive()){
+            if(thread == null || thread.isAlive()){
                 return true;
             }
         }
@@ -110,10 +108,10 @@ class Cycles implements Runnable {
 
     private Runner runner;
 
-    static volatile HashMap<int[][], Integer> cycles;
+    static volatile ConcurrentHashMap<int[][], Integer> cycles;
 
     static {
-        cycles = new HashMap<>();
+        cycles = new ConcurrentHashMap<>();
     }
 
     Cycles(int[][] board){
@@ -128,15 +126,15 @@ class Cycles implements Runnable {
             board[i] = runner.getBoard()[i].clone();
         }
         while(runner.run()){}
-        System.out.println(runner.getCycles());
         cycles.put(board, runner.getCycles());
     }
 
-    static HashMap<String, Integer> getCycles(){
-        HashMap<String, Integer> map = new HashMap<>();
+    static Map<String, Integer> getCycles(){
+        Map<String, Integer> map = new ConcurrentHashMap<>();
         for(int[][] key : cycles.keySet()){
             map.put(printArray(key), cycles.get(key));
         }
+        map = new TreeMap<>(map);
         return map;
     }
 
