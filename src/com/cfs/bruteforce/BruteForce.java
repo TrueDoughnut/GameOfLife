@@ -11,9 +11,14 @@ public class BruteForce {
 
     private int x, y;
 
+    private boolean print;
+    private int numberOfThreads;
+
     public BruteForce(int x, int y){
         this.x = x;
         this.y = y;
+        this.numberOfThreads = 20;
+        this.print = true;
     }
 
     public void run() throws InterruptedException {
@@ -60,13 +65,15 @@ public class BruteForce {
             b++;
         }
 
-        Thread[] threads = new Thread[20];
+        Thread[] threads = new Thread[numberOfThreads];
         doThreads(threads, queue);
 
-        System.out.println(new GsonBuilder()
-                        .setPrettyPrinting().create().
-                        toJson(Cycles.getCycles()));
-        System.out.println(Cycles.getCycles().size());
+        if(print) {
+            System.out.println(new GsonBuilder()
+                    .setPrettyPrinting().create().
+                            toJson(Cycles.getCycles()));
+            System.out.println(Cycles.getCycles().size());
+        }
     }
 
     private void doThreads(Thread[] threads, Queue<int[][]> queue){
@@ -101,6 +108,19 @@ public class BruteForce {
             }
         }
         return list;
+    }
+
+    public void setNumberOfThreads(int x){
+        this.numberOfThreads = x;
+    }
+    public int getNumberOfThreads(){
+        return numberOfThreads;
+    }
+    public void setPrint(boolean print){
+        this.print = print;
+    }
+    public boolean getPrint() {
+        return print;
     }
 }
 
