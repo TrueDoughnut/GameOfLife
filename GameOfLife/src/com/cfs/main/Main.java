@@ -1,8 +1,6 @@
 package com.cfs.main;
 
 import com.cfs.bruteforce.BruteForce;
-import com.cfs.data.Data;
-import com.cfs.data.LiveCellsData;
 import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;

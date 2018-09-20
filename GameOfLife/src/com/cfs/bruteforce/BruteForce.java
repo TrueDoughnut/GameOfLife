@@ -3,7 +3,6 @@ package com.cfs.bruteforce;
 import com.cfs.runner.Runner;
 import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 

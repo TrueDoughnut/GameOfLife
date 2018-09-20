@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GameOfLife.iml" filepath="$PROJECT_DIR$/GameOfLife.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GameOfLife_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GameOfLife_main.iml" group="GameOfLife" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GameOfLife_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GameOfLife_test.iml" group="GameOfLife" />
     </modules>
   </component>
 </project>

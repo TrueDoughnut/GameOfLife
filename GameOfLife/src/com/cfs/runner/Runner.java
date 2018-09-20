@@ -201,8 +201,15 @@ public class Runner {
     public void setDimensions(int x, int y){
         createRandom(x, y);
     }
+    public int[] getDimensions(){
+        int[] arr =  {board[0].length, board.length};
+        return arr;
+    }
     public void setPrint(boolean print){
         this.print = print;
+    }
+    public boolean getPrint(){
+        return print;
     }
 
     public boolean isLive(){
